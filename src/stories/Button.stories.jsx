@@ -1,66 +1,8 @@
-// import { fn } from '@storybook/test';
-
-// import { Button } from './Button';
-
-// // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
-// export default {
-//   title: 'Example/Button',
-//   component: Button,
-//   parameters: {
-//     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
-//     layout: 'centered',
-//   },
-//   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
-//   tags: ['autodocs'],
-//   // More on argTypes: https://storybook.js.org/docs/api/argtypes
-//   argTypes: {
-//     backgroundColor: { control: 'color' },
-//   },
-//   // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#action-args
-//   args: { onClick: fn() },
-// };
-
-// // More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
-// export const Primary = {
-//   args: {
-//     primary: true,
-//     label: 'Button',
-//   },
-// };
-
-// export const Secondary = {
-//   args: {
-//     label: 'Button',
-//   },
-// };
-
-// export const Large = {
-//   args: {
-//     size: 'large',
-//     label: 'Button',
-//   },
-// };
-
-// export const Small = {
-//   args: {
-//     size: 'small',
-//     label: 'Button',
-//   },
-// };
-
-// export const Badge = {
-//   args: {
-//     primary: false,
-//     label: "Button"
-//   }
-// };
-
-
-
-
-// Button.stories.js
-import { fn } from '@storybook/test';
-import { Button } from './Button';
+import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSmile, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import Button from './Button';
+import { action } from '@storybook/addon-actions';
 
 export default {
   title: 'Example/Button',
@@ -70,76 +12,77 @@ export default {
   },
   tags: ['autodocs'],
   argTypes: {
-    backgroundColor: { control: 'color' },
     size: { control: 'select', options: ['small', 'medium', 'large'] },
-    variant: { control: 'select', options: ['filled', 'outlined'] },
-    type: { control: 'select', options: ['default', 'success', 'error'] },
-    disabled: { control: 'boolean' },
-    leftIcon: { control: 'text' },
-    rightIcon: { control: 'text' },
+    variant: { control: 'select', options: ['filled', 'outlined', 'text'] },
+    color: { control: 'select', options: ['emphasis', 'error', 'info'] },
+    state: { control: 'select', options: ['default', 'hover', 'clicked', 'disabled', 'active'] },
+    text: { control: 'boolean' },
+    startIcon: {
+      control: 'boolean',
+      if: { arg: 'text', eq: true }, // Show only if text is true
+    },
+    endIcon: {
+      control: 'boolean',
+      if: { arg: 'text', eq: true }, // Show only if text is true
+    },
+    iconOnly: {
+      control: 'text',
+      if: { arg: 'text', eq: false }, // Show only if text is false
+    },
   },
-  args: { onClick: fn() },
+  args: { onClick: action('clicked') },
 };
 
-export const Primary = {
-  args: {
-    primary: true,
-    label: 'Primary Button',
-    size: 'medium',
-    variant: 'filled',
-    type: 'default',
-    disabled: false,
-  },
+const Template = (args) => {
+  const { startIcon, endIcon, iconOnly, ...rest } = args;
+  return (
+    <Button
+      {...rest}
+      startIcon={startIcon ? <FontAwesomeIcon icon={faSmile} /> : null}
+      endIcon={endIcon ? <FontAwesomeIcon icon={faArrowRight} /> : null}
+      iconOnly={iconOnly ? <FontAwesomeIcon icon={faSmile} /> : null}
+    />
+  );
 };
 
-export const Secondary = {
-  args: {
-    label: 'Secondary Button',
-    size: 'medium',
-    variant: 'outlined',
-    type: 'default',
-    disabled: false,
-  },
+export const Emphasis = Template.bind({});
+Emphasis.args = {
+  label: 'Emphasis Button',
+  size: 'medium',
+  variant: 'filled',
+  color: 'emphasis',
+  state: 'default',
+  text: true,
+  startIcon: <FontAwesomeIcon icon={faSmile} />,
+  endIcon: <FontAwesomeIcon icon={faArrowRight} />,
+  iconOnly: <FontAwesomeIcon icon={faSmile} />, // Use actual icon component
 };
 
-export const Large = {
-  args: {
-    size: 'large',
-    label: 'Large Button',
-    variant: 'filled',
-    type: 'success',
-    disabled: false,
-  },
+export const Error = Template.bind({});
+Error.args = {
+  label: 'Error Button',
+  size: 'medium',
+  variant: 'filled',
+  color: 'error',
+  state: 'default',
+  text: true,
+  startIcon: <FontAwesomeIcon icon={faSmile} />,
+  endIcon: <FontAwesomeIcon icon={faArrowRight} />,
+  iconOnly: <FontAwesomeIcon icon={faSmile} />, // Use actual icon component
 };
 
-export const Small = {
-  args: {
-    size: 'small',
-    label: 'Small Button',
-    variant: 'outlined',
-    type: 'error',
-    disabled: false,
-  },
+export const Info = Template.bind({});
+Info.args = {
+  label: 'Info Button',
+  size: 'medium',
+  variant: 'filled',
+  color: 'info',
+  state: 'default',
+  text: true,
+  startIcon: <FontAwesomeIcon icon={faSmile} />,
+  endIcon: <FontAwesomeIcon icon={faArrowRight} />,
+  iconOnly: <FontAwesomeIcon icon={faSmile} />, // Use actual icon component
 };
 
-export const Disabled = {
-  args: {
-    label: 'Disabled Button',
-    size: 'medium',
-    variant: 'filled',
-    type: 'default',
-    disabled: true,
-  },
-};
 
-export const WithIcons = {
-  args: {
-    label: 'Button with Icons',
-    size: 'medium',
-    variant: 'filled',
-    type: 'success',
-    leftIcon: '⬅️',
-    rightIcon: '➡️',
-    disabled: false,
-  },
-};
+
