@@ -26,7 +26,8 @@ export default {
       if: { arg: 'text', eq: true }, // Show only if text is true
     },
     iconOnly: {
-      control: 'text',
+      control: 'select',
+      options: ['faSmile', 'faArrowRight', 'none'], // Predefined icon names
       if: { arg: 'text', eq: false }, // Show only if text is false
     },
   },
@@ -34,17 +35,33 @@ export default {
 };
 
 const Template = (args) => {
-  const { startIcon, endIcon, iconOnly, ...rest } = args;
+  const { startIcon, endIcon, iconOnly, text, ...rest } = args;
+
+  // Map string inputs to actual FontAwesome icons
+  const getIcon = (iconName) => {
+    switch (iconName) {
+      case 'faSmile':
+        return <FontAwesomeIcon icon={faSmile} />;
+      case 'faArrowRight':
+        return <FontAwesomeIcon icon={faArrowRight} />;
+      default:
+        return null; // Return null if no match
+    }
+  };
+
   return (
     <Button
       {...rest}
-      startIcon={startIcon ? <FontAwesomeIcon icon={faSmile} /> : null}
-      endIcon={endIcon ? <FontAwesomeIcon icon={faArrowRight} /> : null}
-      iconOnly={iconOnly ? <FontAwesomeIcon icon={faSmile} /> : null}
+      text={text} // Pass text explicitly
+      startIcon={text && startIcon ? getIcon('faSmile') : null}
+      endIcon={text && endIcon ? getIcon('faArrowRight') : null}
+      iconOnly={!text && iconOnly ? getIcon(iconOnly) : null}
+      label={text ? args.label : null} // Hide label when text is false
     />
   );
 };
 
+// Variants and States
 export const Emphasis = Template.bind({});
 Emphasis.args = {
   label: 'Emphasis Button',
@@ -52,10 +69,10 @@ Emphasis.args = {
   variant: 'filled',
   color: 'emphasis',
   state: 'default',
-  text: true,
-  startIcon: <FontAwesomeIcon icon={faSmile} />,
-  endIcon: <FontAwesomeIcon icon={faArrowRight} />,
-  iconOnly: <FontAwesomeIcon icon={faSmile} />, // Use actual icon component
+  text: true, // Explicitly set text to true
+  startIcon: true,
+  endIcon: true,
+  iconOnly: 'faSmile', // Selectable icon from controls
 };
 
 export const Error = Template.bind({});
@@ -65,10 +82,10 @@ Error.args = {
   variant: 'filled',
   color: 'error',
   state: 'default',
-  text: true,
-  startIcon: <FontAwesomeIcon icon={faSmile} />,
-  endIcon: <FontAwesomeIcon icon={faArrowRight} />,
-  iconOnly: <FontAwesomeIcon icon={faSmile} />, // Use actual icon component
+  text: true, // Explicitly set text to true
+  startIcon: true,
+  endIcon: true,
+  iconOnly: 'faSmile', // Selectable icon from controls
 };
 
 export const Info = Template.bind({});
@@ -78,11 +95,9 @@ Info.args = {
   variant: 'filled',
   color: 'info',
   state: 'default',
-  text: true,
-  startIcon: <FontAwesomeIcon icon={faSmile} />,
-  endIcon: <FontAwesomeIcon icon={faArrowRight} />,
-  iconOnly: <FontAwesomeIcon icon={faSmile} />, // Use actual icon component
+  text: true, // Explicitly set text to true
+  startIcon: true,
+  endIcon: true,
+  iconOnly: 'faSmile', // Selectable icon from controls
 };
-
-
 

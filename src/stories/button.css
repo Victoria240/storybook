@@ -27,40 +27,12 @@
   cursor: pointer;
   border: 0;
   border-radius: 4px;
-  font-weight: 400; /* Default to regular */
+  font-weight: 400;
   line-height: 1.5;
   font-family: 'Proxima Nova', 'Nunito Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  position: relative; /* Required for ::after positioning */
-  overflow: hidden; /* Ensure ::after doesn't overflow */
-}
-
-.storybook-button::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.05); /* #000000 at 5% opacity */
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.storybook-button--filled {
-  background-color: #308c73; /* Default to emphasis */
-  color: white;
-  border-radius: 4px;
-}
-
-.storybook-button--outlined {
-  background-color: transparent;
-  border: 1px solid;
-  border-radius: 4px;
-}
-
-.storybook-button--text {
-  background-color: transparent;
-  color: #4c4d4f;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
 }
 
 .storybook-button--small {
@@ -78,64 +50,80 @@
   font-size: 16px;
 }
 
-.storybook-button--emphasis {
-  background-color: #308c73;
+/* Variants */
+.storybook-button--filled {
+  background-color: var(--button-color, #308c73);
   color: white;
 }
 
-.storybook-button--emphasis.storybook-button--outlined {
+.storybook-button--outlined {
   background-color: transparent;
-  border-color: #308c73;
-  color: #308c73;
+  border: 1px solid var(--button-color, #308c73);
+  color: var(--button-color, #308c73);
 }
 
-.storybook-button--error {
-  background-color: #D32F2F;
-  color: white;
-}
-
-.storybook-button--error.storybook-button--outlined {
+.storybook-button--text {
   background-color: transparent;
-  border-color: #D32F2F;
-  color: #D32F2F;
+  border: none;
+  color: var(--button-color, #308c73);
 }
 
-.storybook-button--info {
-  background-color: #EBEDF2;
-  color: #4c4d4f;
+
+/* Hover Effect - Overlay instead of replacing background color */
+.storybook-button--hover,
+.storybook-button:hover {
+  /* Support both pseudo-class and class */
+  position: relative;
 }
 
-.storybook-button--info.storybook-button--outlined {
-  background-color: transparent;
-  border-color: #4c4d4f;
-  color: #4c4d4f;
+.storybook-button--hover::after,
+.storybook-button:hover::after {
+  /* Overlay effect */
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.05);
+  /* Layer 5% black transparency */
+  border-radius: inherit;
+  /* Match button radius */
+  pointer-events: none;
+  /* Ensure clicks pass through */
 }
 
-.storybook-button--default {
-  /* Default state styles */
-}
-
-.storybook-button--hover:hover::after {
-  opacity: 1;
-}
-
-.storybook-button--clicked:active::after {
-  opacity: 1;
+.storybook-button--clicked:active,
+.storybook-button--clicked {
+  filter: brightness(0.9);
 }
 
 .storybook-button--disabled {
-  /* Disabled state styles */
   cursor: not-allowed;
   opacity: 0.5;
 }
 
+/* Colors */
+.storybook-button--emphasis {
+  --button-color: #308c73;
+}
+
+.storybook-button--error {
+  --button-color: #D32F2F;
+}
+
+.storybook-button--info {
+  --button-color: #4c4d4f;
+}
+
+/* Icon Sizes */
 .icon-left,
 .icon-right {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 2px;
-  color: inherit; /* Inherit color from parent */
+  color: inherit;
 }
 
 .icon-only {
@@ -145,7 +133,6 @@
   padding: 8px;
 }
 
-/* New icon size styles */
 .storybook-button--small .icon-left,
 .storybook-button--small .icon-right,
 .storybook-button--small .icon-only {
