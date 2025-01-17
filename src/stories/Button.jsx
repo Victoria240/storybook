@@ -35,9 +35,9 @@ const Button = ({
     >
       {text ? ( // Show text only if `text` is true
         <>
-          {startIcon && <span className="icon-left">{startIcon}</span>}
+          <div className='iconContainer'>{startIcon && <span className="icon-left">{startIcon}</span>}</div> 
           {label}
-          {endIcon && <span className="icon-right">{endIcon}</span>}
+          <div className='iconContainer'> {endIcon && <span className="icon-right">{endIcon}</span>}</div> 
         </>
       ) : (
         // Show icon-only button if `text` is false

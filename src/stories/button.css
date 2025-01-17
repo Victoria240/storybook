@@ -35,13 +35,21 @@
   transition: all 0.3s;
 }
 
+.storybook-button .iconContainer {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .storybook-button--small {
   padding: 3px 4px;
   font-size: 12px;
 }
 
 .storybook-button--medium {
-  padding: 5.5px 8px;
+  padding: 4px 8px;
   font-size: 14px;
 }
 
@@ -117,6 +125,8 @@
 }
 
 /* Icon Sizes */
+
+
 .icon-left,
 .icon-right {
   display: inline-flex;
