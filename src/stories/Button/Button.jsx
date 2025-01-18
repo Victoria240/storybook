@@ -30,14 +30,26 @@ const Button = ({
         colorClass,   // emphasis, error, info
         stateClass,   // hover, clicked, disabled
       ].join(' ')}
+      style={{
+        gap: startIcon || endIcon ? '8px' : '0px', // Add gap only if icons exist
+        padding: text ? '8px 16px' : '8px', // Smaller padding for icon-only buttons
+      }}
       onClick={onClick}
       {...props}
     >
       {text ? ( // Show text only if `text` is true
         <>
-          <div className='iconContainer'>{startIcon && <span className="icon-left">{startIcon}</span>}</div> 
+          {startIcon && (
+            <div className="iconContainer">
+              <span className="icon-left">{startIcon}</span>
+            </div>
+          )}
           {label}
-          <div className='iconContainer'> {endIcon && <span className="icon-right">{endIcon}</span>}</div> 
+          {endIcon && (
+            <div className="iconContainer">
+              <span className="icon-right">{endIcon}</span>
+            </div>
+          )}
         </>
       ) : (
         // Show icon-only button if `text` is false
