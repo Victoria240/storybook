@@ -77,7 +77,6 @@
   color: var(--button-color, #308c73);
 }
 
-
 /* Hover Effect - Overlay instead of replacing background color */
 .storybook-button--hover,
 .storybook-button:hover {
@@ -126,8 +125,6 @@
 }
 
 /* Icon Sizes */
-
-
 .icon-left,
 .icon-right {
   display: inline-flex;

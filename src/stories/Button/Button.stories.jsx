@@ -1,103 +1,107 @@
+// Updated Button.stories.jsx
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSmile, faArrowRight } from '@fortawesome/free-solid-svg-icons';
-import Button from './Button';
-import { action } from '@storybook/addon-actions';
+import CustomButton from './Button';
+import { ThemeProvider } from '@mui/material/styles';
+import { lightTheme, darkTheme } from '../../theme/theme';
+import { FaStar, FaRocket } from 'react-icons/fa'; // Example icons
 
 export default {
-  title: 'Example/Button',
-  component: Button,
-  parameters: {
-    layout: 'centered',
-  },
-  tags: ['autodocs'],
+  title: 'Components/Button',
+  component: CustomButton,
   argTypes: {
-    size: { control: 'select', options: ['small', 'medium', 'large'] },
-    variant: { control: 'select', options: ['filled', 'outlined', 'text'] },
-    color: { control: 'select', options: ['emphasis', 'error', 'info'] },
-    state: { control: 'select', options: ['default', 'hover', 'clicked', 'disabled', 'active'] },
-    text: { control: 'boolean' },
+    size: {
+      control: { type: 'select' },
+      options: ['small', 'medium', 'large'],
+    },
+    variant: {
+      control: { type: 'select' },
+      options: ['text', 'outlined', 'contained'],
+    },
+    color: {
+      control: { type: 'select' },
+      options: ['primary', 'info', 'error'], // Limited to these colors
+    },
+    label: {
+      control: 'text',
+    },
     startIcon: {
       control: 'boolean',
-      if: { arg: 'text', eq: true }, // Show only if text is true
     },
     endIcon: {
       control: 'boolean',
-      if: { arg: 'text', eq: true }, // Show only if text is true
     },
     iconOnly: {
-      control: 'select',
-      options: ['faSmile', 'faArrowRight', 'none'], // Predefined icon names
-      if: { arg: 'text', eq: false }, // Show only if text is false
+      control: 'boolean',
+    },
+    state: {
+      control: { type: 'select' },
+      options: ['default', 'hover', 'disabled', 'active'], // Removed focus
+    },
+    theme: {
+      control: { type: 'select' },
+      options: ['light', 'dark'],
     },
   },
-  args: { onClick: action('clicked') },
 };
 
-const Template = (args) => {
-  const { startIcon, endIcon, iconOnly, text, ...rest } = args;
-
-  // Map string inputs to actual FontAwesome icons
-  const getIcon = (iconName) => {
-    switch (iconName) {
-      case 'faSmile':
-        return <FontAwesomeIcon icon={faSmile} />;
-      case 'faArrowRight':
-        return <FontAwesomeIcon icon={faArrowRight} />;
+const Template = ({ state, theme, startIcon, endIcon, iconOnly, ...args }) => {
+  const getStateStyle = () => {
+    switch (state) {
+      case 'hover':
+        return { backgroundColor: 'rgba(0, 0, 0, 0.05)' }; // Hover style
+      case 'active':
+        return { backgroundColor: 'rgba(0, 0, 0, 0.1)' }; // Active style
+      case 'disabled':
+        return { pointerEvents: 'none', opacity: 0.5 }; // Disabled style
+      // case 'focus':
+      //   return { outline: '2px solid rgba(0, 0, 255, 0.5)' }; // Focus commented out
       default:
-        return null; // Return null if no match
+        return {};
     }
   };
 
+  const selectedTheme = theme === 'dark' ? darkTheme : lightTheme;
+
   return (
-    <Button
-      {...rest}
-      text={text} // Pass text explicitly
-      startIcon={text && startIcon ? getIcon('faSmile') : null}
-      endIcon={text && endIcon ? getIcon('faArrowRight') : null}
-      iconOnly={!text && iconOnly ? getIcon(iconOnly) : null}
-      label={text ? args.label : null} // Hide label when text is false
-    />
+    <ThemeProvider theme={selectedTheme}>
+      <CustomButton
+        {...args}
+        style={getStateStyle()}
+        startIcon={startIcon ? <FaStar /> : null}
+        endIcon={endIcon ? <FaRocket /> : null}
+        iconOnly={iconOnly ? <FaStar /> : null}
+        disabled={state === 'disabled'}
+      />
+    </ThemeProvider>
   );
 };
 
-// Variants and States
-export const Emphasis = Template.bind({});
-Emphasis.args = {
-  label: 'Emphasis Button',
+export const Primary = Template.bind({});
+Primary.args = {
   size: 'medium',
-  variant: 'filled',
-  color: 'emphasis',
+  label: 'Primary Button',
+  variant: 'contained',
+  color: 'primary',
   state: 'default',
-  text: true, // Explicitly set text to true
-  startIcon: true,
-  endIcon: true,
-  iconOnly: 'faSmile', // Selectable icon from controls
-};
-
-export const Error = Template.bind({});
-Error.args = {
-  label: 'Error Button',
-  size: 'medium',
-  variant: 'filled',
-  color: 'error',
-  state: 'default',
-  text: true, // Explicitly set text to true
-  startIcon: true,
-  endIcon: true,
-  iconOnly: 'faSmile', // Selectable icon from controls
+  theme: 'light',
 };
 
 export const Info = Template.bind({});
 Info.args = {
-  label: 'Info Button',
   size: 'medium',
-  variant: 'filled',
+  label: 'Info Button',
+  variant: 'contained',
   color: 'info',
   state: 'default',
-  text: true, // Explicitly set text to true
-  startIcon: true,
-  endIcon: true,
-  iconOnly: 'faSmile', // Selectable icon from controls
+  theme: 'light',
 };
 
+export const Error = Template.bind({});
+Error.args = {
+  size: 'medium',
+  label: 'Error Button',
+  variant: 'contained',
+  color: 'error',
+  state: 'default',
+  theme: 'light',
+};

@@ -1,89 +1,100 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './button.css';
+import Button from '@mui/material/Button';
+import { styled } from '@mui/material/styles';
 
-const Button = ({
+const StyledButton = styled(Button)(({ theme, color, variant }) => {
+  const baseStyles = {
+    borderRadius: theme.shape.borderRadius,
+    textTransform: 'none',
+  };
+
+  const containedStyles = {
+    backgroundColor: theme.palette[color]?.main || color,
+    color: theme.palette[color]?.contrastText || '#ffffff',
+    '&:hover': {
+      backgroundColor: theme.palette[color]?.light || color,
+      boxShadow: theme.shadows[2],
+    },
+  };
+
+  const outlinedStyles = {
+    borderColor: theme.palette[color]?.main || color,
+    color: theme.palette[color]?.main || color,
+    backgroundColor: 'transparent',
+    '&:hover': {
+      backgroundColor: theme.palette[color]?.light + '20' || 'rgba(0, 0, 0, 0.04)', // 20% opacity
+    },
+  };
+
+  const textStyles = {
+    color: theme.palette[color]?.main || color,
+    backgroundColor: 'transparent',
+    '&:hover': {
+      backgroundColor: theme.palette[color]?.light + '20' || 'rgba(0, 0, 0, 0.04)',
+    },
+  };
+
+  switch (variant) {
+    case 'contained':
+      return { ...baseStyles, ...containedStyles };
+    case 'outlined':
+      return { ...baseStyles, ...outlinedStyles };
+    case 'text':
+      return { ...baseStyles, ...textStyles };
+    default:
+      return baseStyles;
+  }
+});
+
+const CustomButton = ({
   size,
   label,
-  onClick,
   variant,
   color,
-  state,
-  text, // NEW PROP: Determines if text should be displayed
   startIcon,
   endIcon,
   iconOnly,
   ...props
 }) => {
-  // Generate class names based on props
-  const variantClass = variant ? `storybook-button--${variant}` : '';
-  const colorClass = color ? `storybook-button--${color}` : '';
-  const stateClass = state ? `storybook-button--${state}` : ''; // Handles states dynamically
-
   return (
-    <button
-      type="button"
-      className={[
-        'storybook-button',
-        `storybook-button--${size}`, // small, medium, large
-        variantClass, // filled, outlined, text
-        colorClass,   // emphasis, error, info
-        stateClass,   // hover, clicked, disabled
-      ].join(' ')}
-      style={{
-        gap: startIcon || endIcon ? '8px' : '0px', // Add gap only if icons exist
-        padding: text ? '8px 16px' : '8px', // Smaller padding for icon-only buttons
-      }}
-      onClick={onClick}
+    <StyledButton
+      size={size}
+      variant={variant}
+      color={color}
       {...props}
     >
-      {text ? ( // Show text only if `text` is true
-        <>
-          {startIcon && (
-            <div className="iconContainer">
-              <span className="icon-left">{startIcon}</span>
-            </div>
-          )}
-          {label}
-          {endIcon && (
-            <div className="iconContainer">
-              <span className="icon-right">{endIcon}</span>
-            </div>
-          )}
-        </>
+      {iconOnly ? (
+        <span>{iconOnly}</span>
       ) : (
-        // Show icon-only button if `text` is false
-        <span className="icon-only">{iconOnly}</span>
+        <>
+          {startIcon && <span style={{ marginRight: 8 }}>{startIcon}</span>}
+          {label}
+          {endIcon && <span style={{ marginLeft: 8 }}>{endIcon}</span>}
+        </>
       )}
-    </button>
+    </StyledButton>
   );
 };
 
-// PropTypes validation
-Button.propTypes = {
+CustomButton.propTypes = {
   size: PropTypes.oneOf(['small', 'medium', 'large']),
-  label: PropTypes.string, // Made optional for icon-only buttons
-  onClick: PropTypes.func,
-  variant: PropTypes.oneOf(['filled', 'outlined', 'text']),
-  color: PropTypes.oneOf(['emphasis', 'error', 'info']),
-  state: PropTypes.oneOf(['default', 'hover', 'clicked', 'disabled', 'active']),
-  text: PropTypes.bool, // NEW PROP: Toggles text visibility
+  label: PropTypes.string,
+  variant: PropTypes.oneOf(['text', 'outlined', 'contained']),
+  color: PropTypes.string,
   startIcon: PropTypes.node,
   endIcon: PropTypes.node,
   iconOnly: PropTypes.node,
 };
 
-// Default Props
-Button.defaultProps = {
+CustomButton.defaultProps = {
   size: 'medium',
-  variant: 'filled',
-  color: 'emphasis',
-  state: 'default',
-  text: true, // NEW DEFAULT: Show text by default
+  variant: 'contained',
+  color: 'primary',
+  label: '',
   startIcon: null,
   endIcon: null,
   iconOnly: null,
-  onClick: undefined,
 };
 
-export default Button;
+export default CustomButton;
